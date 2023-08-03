@@ -4,51 +4,51 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nerfstudio"
-version = "0.1.12"
+version = "0.3.2"
 description = "All-in-one repository for state-of-the-art NeRFs"
 readme = "README.md"
 license = { text="Apache 2.0"}
-requires-python = ">=3.7.3"
+requires-python = "==3.10.12"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Programming Language :: Python",
 ]
 dependencies = [
-    "appdirs>=1.4",
-    "av==9.2.0",
-    "tyro>=0.3.31",
-    "gdown==4.6.0",
-    "ninja==1.10.2.3",
-    "functorch==0.2.1",
-    "h5py>=2.9.0",
-    "imageio==2.21.1",
-    "ipywidgets>=7.6",
-    "jupyterlab==3.3.4",
-    "matplotlib==3.5.3",
-    "mediapy==1.1.0",
-    "msgpack==1.0.4",
+    "appdirs==1.4.4",
+    "av==10.0.0",
+    "tyro==0.5.5",
+    "gdown==4.7.1",
+    "ninja==1.11.1",
+    "functorch==2.0.0",
+    "h5py==3.9.0",
+    "imageio==2.31.1",
+    "ipywidgets==8.1.0",
+    "jupyterlab==4.0.4",
+    "matplotlib==3.7.2",
+    "mediapy==1.1.8",
+    "msgpack==1.0.5",
     "msgpack_numpy==0.4.8",
-    "nerfacc==0.3.5",
-    "open3d>=0.16.0",
+    "nerfacc==0.3.3",
+    "open3d==0.17.0",
     "opencv-python==4.6.0.66",
-    "plotly==5.7.0",
-    "protobuf==3.20.0",
-    "pymeshlab==2022.2.post2",
-    "pyngrok==5.1.0",
-    "python-socketio==5.7.1",
-    "requests",
-    "rich==12.5.1",
-    "scikit-image==0.19.3",
-    "tensorboard==2.9.0",
-    "torch==1.12.1",
-    "torchmetrics[image]>=0.9.3",
-    "torchtyping>=0.1.4",
-    "torchvision>=0.13.0",
-    "u-msgpack-python>=2.4.1",
+    "plotly==5.15.0",
+    "protobuf==3.20.3",
+    "pymeshlab==2022.2.post4",
+    "pyngrok==6.0.0",
+    "python-socketio==5.8.0",
+    "requests==2.31.0",
+    "rich==13.5.2",
+    "scikit-image>=0.21.0",
+    "tensorboard==2.13.0",
+    "torch==2.0.1+cu118",
+    "torchmetrics[image]==1.0.2",
+    "torchtyping==0.1.4",
+    "torchvision==0.15.2+cu118",
+    "u-msgpack-python==2.8.0",
     #"nuscenes-devkit>=1.1.1",
-    "wandb>=0.13.3",
-    "xatlas",
-    "trimesh",
+    "wandb>=0.15.8",
+    "xatlas==0.0.7",
+    "trimesh==3.23.0",
 ]
 
 [project.urls]
@@ -58,28 +58,28 @@ dependencies = [
 [project.optional-dependencies]
 # Development packages
 dev = [
-    "black[jupyter]==22.3.0",
-    "pylint==2.13.4",
-    "pytest==7.1.2",
-    "pytest-xdist==2.5.0",
+    "black[jupyter]>=22.3.0",
+    "pylint>=2.13.4",
+    "pytest>=7.1.2",
+    "pytest-xdist>=2.5.0",
     "typeguard>=2.13.3",
 ]
 
 # Documentation related packages
 docs = [
-    "furo==2022.09.29",
+    "furo>=2022.09.29",
     # Specifying ipython for https://github.com/ipython/ipython/issues/13845
-    "ipython==8.6.0",
-    "readthedocs-sphinx-search==0.1.2",
-    "myst-nb==0.16.0",
-    "nbconvert==7.2.5",
-    "nbformat==5.5.0",
-    "sphinx==5.2.1",
-    "sphinxemoji==0.2.0",
-    "sphinx-argparse==0.3.1",
-    "sphinx-copybutton==0.5.0",
-    "sphinx-design==0.2.0",
-    "sphinxext-opengraph==0.6.3"
+    "ipython>=8.6.0",
+    "readthedocs-sphinx-search>=0.1.2",
+    "myst-nb>=0.16.0",
+    "nbconvert>=7.2.5",
+    "nbformat>=5.5.0",
+    "sphinx>=5.2.1",
+    "sphinxemoji>=0.2.0",
+    "sphinx-argparse>=0.3.1",
+    "sphinx-copybutton>=0.5.0",
+    "sphinx-design>=0.2.0",
+    "sphinxext-opengraph>=0.6.3"
 ]
 
 [project.scripts]
@@ -100,7 +100,6 @@ ns-render-mesh = "scripts.render_mesh:entrypoint"
 [options]
 # equivalent to using --extra-index-url with pip, which is needed for specifying the CUDA version torch and torchvision
 dependency_links = [
-    "https://download.pytorch.org/whl/cu113"
 ]
 
 [tool.setuptools.packages.find]
@@ -154,5 +153,5 @@ reportMissingTypeStubs = false
 reportPrivateImportUsage = false
 reportUndefinedVariable = false
 
-pythonVersion = "3.7"
+pythonVersion = "3.10"
 pythonPlatform = "Linux"
