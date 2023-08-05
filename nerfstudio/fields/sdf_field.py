@@ -254,6 +254,10 @@ class SDFField(Field):
                 features_per_level=self.features_per_level,
                 smoothstep=smoothstep,
             )
+            self.hash_encoding_mask = torch.ones(
+                self.num_levels * self.features_per_level,
+                dtype=torch.float32,
+            )  # [AHL] added this due to an error in forward, Aug. 4, 2023
         elif self.config.encoding_type == "tensorf_vm":
             print("using tensor vm")
             self.encoding = TensorVMEncoding(128, 24, smoothstep=smoothstep)
@@ -392,7 +396,6 @@ class SDFField(Field):
         pe = self.position_encoding(inputs)
         if not self.config.use_position_encoding:
             pe = torch.zeros_like(pe)
-        
         inputs = torch.cat((inputs, pe, feature), dim=-1)
 
         x = inputs
