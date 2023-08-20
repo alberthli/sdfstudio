@@ -5,6 +5,29 @@
     <img src="media/overview.png" center width="95%"/>
 </p>
 
+# Fork Info
+This is a fork of the SDFStudio package (itself a fork of nerfstudio). The main changes here are
+
+1. Renaming all mentions of nerfstudio to sdfstudio so it doesn't clash with any projects that also have nerfstudio installed;
+2. Updating the dependencies to we can use Cuda 11.8;
+3. Updating the cli commands with the prefix `ss` to distinguish them from `ns`;
+4. Some minor code changes to allow non-tcnn backends properly for training SDFs.
+
+Current conflicts in the fork:
+
+1. `nerfstudio` currently requires `nerfacc` version `0.5.2`, but SDF studio forked from a much earlier version that used `nerfacc` version `0.3.3`. There were breaking changes to the API that prevent an easy upgrade. This + the older version make the training run a good bit slower than the most up-to-date `nerfstudio` release.
+
+Simple test
+```
+ss-download-data sdfstudio
+
+# basic example
+ss-train neus-facto --pipeline.model.sdf-field.inside-outside False --vis viewer --experiment-name neus-facto-dtu65 sdfstudio-data --data data/sdfstudio-demo-data/dtu-scan65
+
+# changing from tcnn encodings to periodic volume encodings
+ss-train neus-facto --pipeline.model.sdf-field.inside-outside False --pipeline.model.sdf-field.encoding-type periodic --vis viewer --experiment-name neus-facto-dtu65 sdfstudio-data --data data/sdfstudio-demo-data/dtu-scan65
+```
+
 # About
 
 SDFStudio is a unified and modular framework for neural implicit surface reconstruction, built on top of the awesome nerfstudio project. We provide a unified implementation of three major implicit surface reconstruction methods: UniSurf, VolSDF, and NeuS. SDFStudio also supports various scene representions, such as MLPs, Tri-plane, and Multi-res. feature grids, and multiple point sampling strategies such as surface-guided sampling as in UniSurf, and Voxel-surface guided sampling from NeuralReconW. It further integrates recent advances in the area such as the utillization of monocular cues (MonoSDF), geometry regularization (UniSurf) and multi-view consistency (Geo-NeuS). Thanks to the unified and modular implementation, SDFStudio makes it easy to transfer ideas from one method to another. For example, Mono-NeuS applies the idea from MonoSDF to NeuS, and Geo-VolSDF applies the idea from Geo-NeuS to VolSDF.

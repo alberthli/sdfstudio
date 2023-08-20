@@ -95,14 +95,14 @@ RUN python3.8 -m pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 torch
 # Install tynyCUDNN.
 RUN python3.8 -m pip install git+https://github.com/NVlabs/tiny-cuda-nn.git#subdirectory=bindings/torch
 
-# Copy nerfstudio folder and give ownership to user.
-ADD . /home/user/nerfstudio
+# Copy sdfstudio folder and give ownership to user.
+ADD . /home/user/sdfstudio
 USER root
-RUN chown -R user:user /home/user/nerfstudio
+RUN chown -R user:user /home/user/sdfstudio
 USER 1000:1000
 
-# Install nerfstudio dependencies.
-RUN cd nerfstudio && \
+# Install sdfstudio dependencies.
+RUN cd sdfstudio && \
     python3.8 -m pip install -e . && \
     cd ..
 
@@ -110,5 +110,4 @@ RUN cd nerfstudio && \
 WORKDIR /workspace
 
 # Install nerfstudio cli auto completion and enter shell if no command was provided.
-CMD ns-install-cli --mode install && /bin/bash
-
+CMD ss-install-cli --mode install && /bin/bash
