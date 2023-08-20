@@ -22,7 +22,7 @@ from typing import Callable, List, Optional, Tuple, Union
 
 import nerfacc
 import torch
-from nerfacc import OccupancyGrid
+from nerfacc import OccGridEstimator
 from torch import nn
 from torchtyping import TensorType
 
@@ -382,7 +382,7 @@ class VolumetricSampler(Sampler):
 
     def __init__(
         self,
-        occupancy_grid: Optional[OccupancyGrid] = None,
+        occupancy_grid: Optional[OccGridEstimator] = None,
         density_fn: Optional[Callable[[TensorType[..., 3]], TensorType[..., 1]]] = None,
         scene_aabb: Optional[TensorType[2, 3]] = None,
     ) -> None:
@@ -448,18 +448,27 @@ class VolumetricSampler(Sampler):
 
         rays_o = ray_bundle.origins.contiguous()
         rays_d = ray_bundle.directions.contiguous()
+        times = ray_bundle.times
+
         if ray_bundle.camera_indices is not None:
             camera_indices = ray_bundle.camera_indices.contiguous()
         else:
             camera_indices = None
 
-        ray_indices, starts, ends = nerfacc.ray_marching(
+        if ray_bundle.nears is not None and ray_bundle.fars is not None:
+            t_min = ray_bundle.nears.contiguous().reshape(-1)
+            t_max = ray_bundle.fars.contiguous().reshape(-1)
+
+        else:
+            t_min = None
+            t_max = None
+
+        ray_indices, starts, ends = self.occupancy_grid.sampling(
             rays_o=rays_o,
             rays_d=rays_d,
-            scene_aabb=self.scene_aabb,
-            grid=self.occupancy_grid,
-            # this is a workaround - using density causes crash and damage quality. should be fixed
-            sigma_fn=None,  # self.get_sigma_fn(rays_o, rays_d),
+            t_min=t_min,
+            t_max=t_max,
+            sigma_fn=self.get_sigma_fn(rays_o, rays_d, times),
             render_step_size=render_step_size,
             near_plane=near_plane,
             far_plane=far_plane,

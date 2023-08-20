@@ -23,7 +23,6 @@ from typing import Dict, List, Optional, Tuple, Type
 
 import nerfacc
 import torch
-from nerfacc import ContractionType
 from torch.nn import Parameter
 from torchmetrics import PeakSignalNoiseRatio
 from torchmetrics.functional import structural_similarity_index_measure
@@ -37,7 +36,8 @@ from sdfstudio.engine.callbacks import (
     TrainingCallbackLocation,
 )
 from sdfstudio.field_components.field_heads import FieldHeadNames
-from sdfstudio.fields.instant_ngp_field import TCNNInstantNGPField
+from sdfstudio.field_components.spatial_distortions import SceneContraction
+from sdfstudio.fields.nerfacto_field import TCNNNerfactoField
 from sdfstudio.model_components.losses import MSELoss
 from sdfstudio.model_components.ray_samplers import VolumetricSampler
 from sdfstudio.model_components.renderers import (
@@ -64,8 +64,6 @@ class InstantNGPModelConfig(ModelConfig):
     max_num_samples_per_ray: int = 24
     """Number of samples in field evaluation."""
     grid_resolution: int = 128
-    """Resolution of the grid used for the field."""
-    contraction_type: ContractionType = ContractionType.UN_BOUNDED_SPHERE
     """Resolution of the grid used for the field."""
     cone_angle: float = 0.004
     """Should be set to 0.0 for blender scenes but 1./256 for real scenes."""
@@ -100,26 +98,37 @@ class NGPModel(Model):
         """Set the fields and modules."""
         super().populate_modules()
 
-        self.field = TCNNInstantNGPField(
+        if self.config.disable_scene_contraction:
+            scene_contraction = None
+        else:
+            scene_contraction = SceneContraction(order=float("inf"))
+
+        # self.field = TCNNInstantNGPField(
+        #     aabb=self.scene_box.aabb,
+        #     contraction_type=self.config.contraction_type,
+        #     use_appearance_embedding=self.config.use_appearance_embedding,
+        #     num_images=self.num_train_data,
+        # )
+        self.field = TCNNNerfactoField(
             aabb=self.scene_box.aabb,
-            contraction_type=self.config.contraction_type,
-            use_appearance_embedding=self.config.use_appearance_embedding,
+            appearance_embedding_dim=0 if self.config.use_appearance_embedding else 32,
             num_images=self.num_train_data,
+            log2_hashmap_size=self.config.log2_hashmap_size,
+            max_res=self.config.max_res,
+            spatial_distortion=scene_contraction,
         )
 
         self.scene_aabb = Parameter(self.scene_box.aabb.flatten(), requires_grad=False)
 
         # Occupancy Grid
-        self.occupancy_grid = nerfacc.OccupancyGrid(
+        self.occupancy_grid = nerfacc.OccGridEstimator(
             roi_aabb=self.scene_aabb,
             resolution=self.config.grid_resolution,
-            contraction_type=self.config.contraction_type,
+            levels=self.config.grid_levels,
         )
 
         # Sampler
-        vol_sampler_aabb = self.scene_box.aabb if self.config.contraction_type == ContractionType.AABB else None
         self.sampler = VolumetricSampler(
-            scene_aabb=vol_sampler_aabb,
             occupancy_grid=self.occupancy_grid,
             density_fn=self.field.density_fn,
         )
