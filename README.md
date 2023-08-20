@@ -13,10 +13,6 @@ This is a fork of the SDFStudio package (itself a fork of nerfstudio). The main 
 3. Updating the cli commands with the prefix `ss` to distinguish them from `ns`;
 4. Some minor code changes to allow non-tcnn backends properly for training SDFs.
 
-Current conflicts in the fork:
-
-1. `nerfstudio` currently requires `nerfacc` version `0.5.2`, but SDF studio forked from a much earlier version that used `nerfacc` version `0.3.3`. There were breaking changes to the API that prevent an easy upgrade. This + the older version make the training run a good bit slower than the most up-to-date `nerfstudio` release.
-
 Simple test
 ```
 ss-download-data sdfstudio
