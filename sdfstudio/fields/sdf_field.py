@@ -245,7 +245,6 @@ class SDFField(Field):
             )
 
         elif self.config.encoding_type == "periodic":
-            print("using periodic encoding")
             self.encoding = PeriodicVolumeEncoding(
                 num_levels=self.num_levels,
                 min_res=self.base_res,

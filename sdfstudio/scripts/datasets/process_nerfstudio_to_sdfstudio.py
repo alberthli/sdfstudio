@@ -78,7 +78,7 @@ def main(args):
         # Enlarge bbox by 1.05 for object scene and by 5.0 for indoor scene
         # TODO: Adaptively estimate `scene_scale_mult` based on depth-map or point-cloud prior
         if not args.scene_scale_mult:
-            args.scene_scale_mult = 1.05 if args.scene_type == "object" else 5.0
+            args.scene_scale_mult = 1.0 if args.scene_type == "object" else 5.0
         scene_scale = 2.0 / (np.max(max_vertices - min_vertices) * args.scene_scale_mult)
         scene_center = (min_vertices + max_vertices) / 2.0
         # normalize pose to unit cube
