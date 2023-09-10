@@ -120,6 +120,15 @@ def main(args):
             "radius": np.min(max_vertices - min_vertices) / 2.0,
             "collider_type": "box",
         }
+    elif args.scene_type == "custom_hardware"
+        # custom scene_box settings for hardware experiments
+        scene_box = {
+            "aabb": [[-1, -1, -1], [1, 1, 1]],
+            "near": 0.05,
+            "far": 2.5,
+            "radius": 1.0,
+            "collider_type": "box",
+        }
 
     # === Resize the images and intrinsics ===
     # Only resize the images when we want to use mono prior
