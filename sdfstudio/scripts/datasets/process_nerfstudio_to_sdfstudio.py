@@ -120,7 +120,7 @@ def main(args):
             "radius": np.min(max_vertices - min_vertices) / 2.0,
             "collider_type": "box",
         }
-    elif args.scene_type == "custom_hardware"
+    elif args.scene_type == "custom_hardware":
         # custom scene_box settings for hardware experiments
         scene_box = {
             "aabb": [[-1, -1, -1], [1, 1, 1]],
