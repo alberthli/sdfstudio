@@ -123,10 +123,10 @@ def main(args):
     elif args.scene_type == "custom_hardware":
         # custom scene_box settings for hardware experiments
         scene_box = {
-            "aabb": [[-1, -1, -1], [1, 1, 1]],
-            "near": 0.05,
-            "far": 2.5,
-            "radius": 1.0,
+            "aabb": [[-0.5, -0.5, 0], [0.5, 0.5, 0.5]],
+            "near": 0.01,
+            "far": 0.5,
+            "radius": 0.5,
             "collider_type": "box",
         }
 
