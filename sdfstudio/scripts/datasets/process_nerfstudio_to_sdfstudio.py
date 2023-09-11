@@ -58,7 +58,7 @@ def main(args):
         image_paths.append(img_path)
 
         # load sensor depths
-        if args.data_type == "polycam" and args.sensor_depth:
+        if args.sensor_depth:
             depth_path = input_dir / "depths" / f"{file_path.stem}.png"
             assert depth_path.exists()
             depth_paths.append(depth_path)
@@ -123,10 +123,10 @@ def main(args):
     elif args.scene_type == "custom_hardware":
         # custom scene_box settings for hardware experiments
         scene_box = {
-            "aabb": [[-0.2, -0.2, -0.2], [0.2, 0.2, 0.2]],
-            "near": 0.01,
-            "far": 0.5,
-            "radius": 0.5,
+            "aabb": [[-0.5, -0.5, -0.5], [0.5, 0.5, 0.5]],
+            "near": 0.05,
+            "far": 2.0,
+            "radius": 1.0,
             "collider_type": "box",
         }
 
