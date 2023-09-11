@@ -123,7 +123,7 @@ def main(args):
     elif args.scene_type == "custom_hardware":
         # custom scene_box settings for hardware experiments
         scene_box = {
-            "aabb": [[-0.5, -0.5, 0], [0.5, 0.5, 0.5]],
+            "aabb": [[-0.2, -0.2, -0.2], [0.2, 0.2, 0.2]],
             "near": 0.01,
             "far": 0.5,
             "radius": 0.5,
