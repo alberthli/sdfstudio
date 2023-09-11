@@ -119,6 +119,8 @@ class SurfaceModelConfig(ModelConfig):
     """whether to use near and far collider from command line"""
     scene_contraction_norm: Literal["inf", "l2"] = "inf"
     """Which norm to use for the scene contraction."""
+    disable_scene_contraction: bool = False
+    """Whether to disable scene contraction."""
 
 
 class SurfaceModel(Model):
@@ -141,7 +143,10 @@ class SurfaceModel(Model):
         else:
             raise ValueError("Invalid scene contraction norm")
 
-        self.scene_contraction = SceneContraction(order=order)
+        if self.config.disable_scene_contraction:
+            self.scene_contraction = None
+        else:
+            self.scene_contraction = SceneContraction(order=order)
 
         # Can we also use contraction for sdf?
         # Fields
@@ -297,15 +302,19 @@ class SurfaceModel(Model):
         normal = self.renderer_normal(semantics=field_outputs[FieldHeadNames.NORMAL], weights=weights)
         accumulation = self.renderer_accumulation(weights=weights)
 
+        if self.config.disable_scene_contraction:
+            ray_points = ray_samples.frustums.get_start_positions()
+        else:
+            ray_points = self.scene_contraction(
+                ray_samples.frustums.get_start_positions()
+            )
         outputs = {
             "rgb": rgb,
             "accumulation": accumulation,
             "depth": depth,
             "normal": normal,
             "weights": weights,
-            "ray_points": self.scene_contraction(
-                ray_samples.frustums.get_start_positions()
-            ),  # used for creating visiblity mask
+            "ray_points": ray_points,  # used for creating visiblity mask
             "directions_norm": ray_bundle.directions_norm,  # used to scale z_vals for free space and sdf loss
         }
 
