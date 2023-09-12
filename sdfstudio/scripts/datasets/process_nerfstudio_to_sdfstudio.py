@@ -58,7 +58,7 @@ def main(args):
         image_paths.append(img_path)
 
         # load sensor depths
-        if args.sensor_depth:
+        if args.data_type == "polycam" and args.sensor_depth:
             depth_path = input_dir / "depths" / f"{file_path.stem}.png"
             assert depth_path.exists()
             depth_paths.append(depth_path)
